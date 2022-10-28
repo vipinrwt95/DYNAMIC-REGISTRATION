@@ -21,37 +21,46 @@ function getPosts()
 
 
 
-function createPost(post,callback)
-{
- setTimeout(()=>
- {
-  posts.push({...post,createdAt:new Date()})
-  callback();
- },1000)
+// function createPost(post,callback)
+// {
+//  setTimeout(()=>
+//  {
+//   posts.push({...post,createdAt:new Date()})
+//   callback();
+//  },1000)
 
-}
+// }
 
-createPost({title:'Post three',body:'this is post three'},getPosts,lasteditedinsecondsago);
+
 // creating new function and using old function as callback
-function create4thPost(post,createPost)
-{
-  setTimeout(()=>{
-    posts.push({...post,createdAt:new Date()}) 
-    createPost();
-  },2000)  
+
+
+// changing createpost and editpost to async await function...remember this always return a promise
+
+const editpost=async()=>
+{ let post={title:'Post three',body:'this is post three'};
+ const createPost= new Promise((resolve,reject)=>
+ {  
+    setTimeout(()=>
+    { 
+     posts.push({...post,createdAt:new Date()})
+     console.log(posts);
+     resolve();
+    },3000) 
+ })
+
+const deletepost=new Promise((resolve,reject)=>
+ { 
+   setTimeout(() => {
+    posts.pop()
+    resolve(posts)
+   },5000)
+     
+ })
+ 
+ await Promise.all([createPost,deletepost])
+ return posts;
 }
 
-create4thPost({title:'Post four',body:'this is post four'},getPosts);
-
-
-function lasteditedinsecondsago()
-{
-    setInterval(()=>
-    {
-        let output='';
-        output=`<li>last edited ${}</li>`
-    },1000)
-    
-
-
-}
+editpost().then((m)=>console.log(m));
+//editpost().then(getPosts);  
